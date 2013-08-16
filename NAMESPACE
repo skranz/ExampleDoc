@@ -1,0 +1,4 @@
+export(add.example.to.Rd)
+export(add.examples.to.package)
+export(document.with.examples)
+export(get.examples)

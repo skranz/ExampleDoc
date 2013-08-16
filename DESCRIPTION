@@ -1,0 +1,13 @@
+Package: ExampleDoc
+Type: Package
+Title: Insert examples into R help files
+Version: 0.05
+Date: 2013-08-16
+Author: Sebastian Kranz
+Maintainer: Sebastian Kranz <sebastian.kranz@uni-ulm.com>
+Description: Insert examples into R help files
+License: GPL (>= 2)
+Depends:
+    devtools,
+    restorepoint
+
