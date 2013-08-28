@@ -1,3 +1,7 @@
+.onLoad = function(...)  {
+  # If loaded as library overwrite restore.point to an empty function
+  assign("restore.point", function(...){}, envir=parent.env(environment()))
+}
 
 
 #' Build package documentation with examples

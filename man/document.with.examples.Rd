@@ -15,5 +15,6 @@
   
   document.with.examples("ExampleDoc", "C:/libraries/ExampleDoc/ExampleDoc")  
   document.with.examples("RMaxima", "C:/libraries/RMaxima/RMaxima")  
+  document.with.examples("stringtools", "C:/libraries/stringtools/stringtools")  
   
 }}
