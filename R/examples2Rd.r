@@ -6,11 +6,11 @@
 
 #' Build package documentation with examples
 #' @export
-document.with.examples = function(package, package.path = path.package(package),clean=TRUE,roclets=c("namespace","rd"), ...) {
+document.with.examples = function(package, package.path = path.package(package),clean=TRUE,roclets=c("namespace","rd"),example.path=NULL, ...) {
   library(devtools)
   #load_all(package.path)
   document(package.path, clean=clean,roclets=roclets,...)
-  add.examples.to.package(package,package.path=package.path,...)
+  add.examples.to.package(package,package.path=package.path,example.path=example.path,...)
 }
 
 
@@ -20,6 +20,9 @@ examples.document.with.examples = function() {
   document.with.examples("ExampleDoc", "C:/libraries/ExampleDoc/ExampleDoc")  
   document.with.examples("RMaxima", "C:/libraries/RMaxima/RMaxima")  
   document.with.examples("stringtools", "C:/libraries/stringtools/stringtools")  
+  
+  
+  document.with.examples("restorepoint","C:/libraries/restorepoint/restorepoint", roclets=c("rd","namespace"), example.path = "C:/libraries/restorepoint/restorepoint/examples")
   
 }
   
@@ -85,8 +88,13 @@ get.R.files = function(package.path=NULL,files=NULL, path=NULL) {
     return(files)
   if (!is.null(package.path))
     path = c(path,paste0(package.path,"/R"))
-  files = list.files(path, pattern="^.*\\.[Rr]$")
-  return(paste0(path,"/",files))
+  
+  files = NULL
+  for (p in path) {
+    files = c(files, paste0(p,"/",list.files(p, pattern="^.*\\.[Rr]$")))
+  }
+  
+  return(files)
 }
 
 #' Extract all example functions from a set of files
@@ -99,8 +107,7 @@ get.examples = function(package.path=NULL,files=NULL, path=NULL) {
   restore.point("get.examples")
   
   files = get.R.files(package.path,files,path)
-  examples = lapply(files, get.examples.from.file)
-  do.call(c,examples)
+  get.examples.from.files(files)
 }
 
 examples.get.examples = function() {
@@ -109,15 +116,16 @@ examples.get.examples = function() {
   
 }
 
-get.examples.from.file = function(file, prefix="examples.", postfix="") {
+get.examples.from.files = function(files, prefix="examples.", postfix="") {
   env = new.env(parent=.GlobalEnv)
-  source(file,local=env, keep.source=TRUE)
+  for (file in files)
+    source(file,local=env, keep.source=TRUE)
   objs = ls(env)
   ex.li = lapply(objs, function(fun.name) {
     example.fun.name = paste0(prefix,fun.name,postfix)
     if (!exists(example.fun.name,env))
       return(NULL)
-    #message(paste(fun.name," "))
+    message(paste0("Example for: ",fun.name))
     example.fun = get(example.fun.name,env)
     list(fun.name=fun.name,
          example.fun=example.fun,
@@ -127,7 +135,6 @@ get.examples.from.file = function(file, prefix="examples.", postfix="") {
   empty = sapply(ex.li,is.null)
   ex.li[!empty]
 }
-  
   
 # Checks whether any pattern matches in x
 any.grepl = function(patterns,x,...) {

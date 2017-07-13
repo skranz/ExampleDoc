@@ -4,7 +4,8 @@
 \usage{
   document.with.examples(package,
     package.path = path.package(package), clean = TRUE,
-    roclets = c("namespace", "rd"), ...)
+    roclets = c("namespace", "rd"), example.path = NULL,
+    ...)
 }
 \description{
   Build package documentation with examples
@@ -16,5 +17,8 @@
   document.with.examples("ExampleDoc", "C:/libraries/ExampleDoc/ExampleDoc")  
   document.with.examples("RMaxima", "C:/libraries/RMaxima/RMaxima")  
   document.with.examples("stringtools", "C:/libraries/stringtools/stringtools")  
+  
+  
+  document.with.examples("restorepoint","C:/libraries/restorepoint/restorepoint", roclets=c("rd","namespace"), example.path = "C:/libraries/restorepoint/restorepoint/examples")
   
 }}
